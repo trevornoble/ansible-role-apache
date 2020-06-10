@@ -40,6 +40,12 @@ On Debian/Ubuntu, a default virtualhost is included in Apache's configuration. S
 
 You can add or override global Apache configuration settings in the role-provided vhosts file (assuming `apache_create_vhosts` is true) using this variable. By default it only sets the DirectoryIndex configuration.
 
+    apache_config_files:
+      # Override apache config files as jinja templates.
+      - { src: path/relative/to/playbook/afile.cnf, dest: conf.modules.d/00-mpm.conf, force: no }
+
+You can override the apache config files by providing default config files. The destination director is relative to the apache apache_server_root. You can also set whether the file is overwritten if it already exists with the force: yes/no.
+
     apache_vhosts:
       # Additional optional properties: 'serveradmin, serveralias, extra_parameters'.
       - servername: "local.dev"

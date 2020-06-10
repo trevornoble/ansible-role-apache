@@ -5,6 +5,15 @@ apache_listen_ip: "*"
 apache_listen_port: 80
 apache_listen_port_ssl: 443
 
+# Set granularity for footer line showing server name and version number under server-generated documents.
+# `On` (default), `Off` or `Email` will display this information by adding the Virtual Server host email;
+apache_config_signature_visibility: "Off"
+
+# set granularity of apache version displayed
+# Full (or not specified), Prod[uctOnly], Major, Minor, Min[imal] or OS
+apache_config_version_visibility: "Min"
+
+
 apache_create_vhosts: true
 apache_vhosts_filename: "vhosts.conf"
 apache_vhosts_template: "vhosts.conf.j2"
@@ -37,7 +46,7 @@ apache_vhosts_ssl: []
 
 apache_ignore_missing_ssl_certificate: true
 
-apache_ssl_protocol: "All -SSLv2 -SSLv3"
+apache_ssl_protocol: "All -SSLv2 -SSLv3 -TLSv1 -TLSv1.1"
 apache_ssl_cipher_suite: "AES256+EECDH:AES256+EDH"
 
 # Only used on Debian/Ubuntu.
@@ -56,3 +65,7 @@ apache_restart_state: restarted
 # Apache package state; use `present` to make sure it's installed, or `latest`
 # if you want to upgrade or switch versions using a new repo.
 apache_packages_state: present
+
+# Override apache config files as jinja templates.
+apache_config_files: []
+#  - { src: path/relative/to/playbook/afile.cnf, dest: conf.modules.d/00-mpm.conf, force: no }

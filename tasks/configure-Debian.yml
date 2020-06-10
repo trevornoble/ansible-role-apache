@@ -16,6 +16,22 @@
   with_items: "{{ apache_mods_enabled }}"
   notify: restart apache
 
+- name: Configure granularity of apache version displayed.
+  lineinfile:
+    dest: "{{ apache_server_root }}/{{ apache_daemon }}.conf"
+    regexp: "^ServerTokens "
+    line: "ServerTokens {{ apache_config_version_visibility }}"
+    state: present
+  notify: restart apache
+
+- name: Configure granularity of apache signature displayed.
+  lineinfile:
+    dest: "{{ apache_server_root }}/{{ apache_daemon }}.conf"
+    regexp: "^ServerSignature "
+    line: "ServerSignature {{ apache_config_signature_visibility }}"
+    state: present
+  notify: restart apache
+
 - name: Disable Apache mods.
   file:
     path: "{{ apache_server_root }}/mods-enabled/{{ item }}"
@@ -52,3 +68,11 @@
     state: absent
   notify: restart apache
   when: apache_remove_default_vhost
+
+- name: Override default Apache configurations.
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ apache_server_root }}/{{ item.dest }}"
+    force: "{{ item.force | default('yes') }}"
+  with_items: "{{ apache_config_files }}"
+  notify: restart apache
