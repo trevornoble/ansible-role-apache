@@ -9,15 +9,6 @@
   with_items: "{{ apache_ports_configuration_items }}"
   notify: restart apache
 
-- name: Enable Apache mods.
-  file:
-    src: "{{ apache_server_root }}/mods-available/{{ item }}"
-    dest: "{{ apache_server_root }}/mods-enabled/{{ item }}"
-    state: link
-    mode: 0644
-  with_items: "{{ apache_mods_enabled }}"
-  notify: restart apache
-
 - name: Configure granularity of apache version displayed.
   lineinfile:
     dest: "{{ apache_server_root }}/{{ apache_daemon }}.conf"
@@ -32,6 +23,15 @@
     regexp: "^ServerSignature "
     line: "ServerSignature {{ apache_config_signature_visibility }}"
     state: present
+  notify: restart apache
+
+- name: Enable Apache mods.
+  file:
+    src: "{{ apache_server_root }}/mods-available/{{ item }}"
+    dest: "{{ apache_server_root }}/mods-enabled/{{ item }}"
+    state: link
+    mode: 0644
+  with_items: "{{ apache_mods_enabled }}"
   notify: restart apache
 
 - name: Disable Apache mods.
